@@ -16,10 +16,14 @@ class User
         $this->selectData = new Data;
     }
 
-    public function get_all_student()
+    public function get_all_student($limit = 1, $offset = 0)
     {
-        $result = $this->db->connect()->query("SELECT * FROM `students`");
+        
+        $result = $this->db->connect()->query("SELECT * FROM `students` LIMIT {$limit} OFFSET {$offset}");
         $data['users'] = $this->selectData->select_all($result);
+        $pagi= $this->db->connect()->query("SELECT count(student_id) as total FROM `students` WHERE 1");
+        $total = ($pagi->fetch_assoc())['total'];
+        $data['paginate'] = ceil($total/$limit);
         return $data;
     }
 
@@ -58,5 +62,11 @@ class User
         $this->db->connect()->close();
 
         return $result;
+    }
+
+    public function searchStudent($name) {
+        $result = $this->db->connect()->query("SELECT * FROM `students` WHERE `students`.`name` like '%$name%'");
+        $data = $this->selectData->select_all($result);
+        return $data;
     }
 }

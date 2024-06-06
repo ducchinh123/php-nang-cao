@@ -18,11 +18,12 @@ class HomeController
         $this->UserModel = new User();
         $this->view = new View;
     }
-    public function index($data = [])
+    public function index($limit = 1, $offset = 1)
     {
 
-
-        $data = $this->UserModel->get_all_student();
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 1;
+        $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
+        $data = $this->UserModel->get_all_student($limit, $offset);
         return $this->view->view('home/index', $data);
     }
 
@@ -77,7 +78,7 @@ class HomeController
     {
         $id = (int) $_GET['id'];
         $this->UserModel->deleteStudent($id);
-        return header('Location: ' . URL_ROOT);
+        return header('Location: ' . URL_ROOT.'?page=home');
     }
 
     public function update($id)
@@ -120,16 +121,24 @@ class HomeController
                 return $this->view->view('home/update', $user, $data);
             }
 
-            $update = $this->UserModel->updateStudent($id,$data);
+            $update = $this->UserModel->updateStudent($id, $data);
             if ($update) {
                 $success['success'] = 'Cập nhật hs thành công';
-                return header('Location: '.URL_ROOT."?page=student&act=update&id=".$id);
+                return header('Location: ' . URL_ROOT . "?page=student&act=update&id=" . $id);
             }
 
         }
 
         return $this->view->view('home/update', $user);
-        
+
     }
 
+
+    public function searchStudent()
+    {
+        $name = $_POST['name'];
+        $result = $this->UserModel->searchStudent($name);
+        $data = $result;
+        echo json_encode($data);
+    }
 }
