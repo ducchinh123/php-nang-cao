@@ -1,0 +1,17 @@
+{
+    "name": "mvc/autoload",
+    "description": "Hoc autolaod composer",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "chinhddph28756",
+            "email": "chinhddph.28756@gmail.com"
+        }
+    ],
+    "require": {}
+}
